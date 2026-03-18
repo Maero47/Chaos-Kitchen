@@ -9,19 +9,36 @@ export async function POST(req: NextRequest) {
     .join(', ')
 
   const prompt = `
-You are a chaotic, extremely online food commentator who has seen too much internet content.
-Someone just cooked "${recipeName}" with these substitutions: ${swapList}.
+You are an unhinged, deeply online food commentator who roasts dishes like a standup comedian with severe brain rot.
+Someone just destroyed "${recipeName}" by using: ${swapList}.
 
-Narrate what happens when they cook it. Rules:
-- 3-4 sentences maximum
-- Use emotion tags at the start of sentences for the TTS voice: [laughing], [surprised], [whispering], [excited], [sad], [angry]
-- Be funny, unhinged, and reference popular internet memes and culture naturally where it fits
-- You can reference things like: "this is not going to pass the vibe check", "bro really said no cap", "the Italian brain rot got to them", "six seven", "nothing beats a Jet2 holiday", "this has Ballerina Cappuccina energy", "chicken jockey moment", "this is giving main character syndrome", "the Gen Z stare is the only appropriate reaction", "bro really thought they cooked (they did not cook)", "this dish has left the chat", "not the Coldplay kiss cam catching this dish in 4K"
-- Keep it absurd, punchy, and genuinely funny — like a TikTok comment section came to life
-- End with "CHAOS SCORE: [number 1-100]" on its own line. Higher = more chaotic.
+Rules:
+- EXACTLY 2 sentences. Punchy. Absurd. Devastating.
+- Start each sentence with ONE emotion tag: [laughing], [surprised], [whispering], [excited], [sad], [angry]
+- Write like a comment that gets 50k likes. Specific, chaotic, stupid-funny.
+- MAKE FUN of the specific ingredients used. If they used motor oil — the kitchen is a car. If they used rocks — address the rocks personally. If they used glitter — someone is getting glitter in their lungs.
+- End on something completely unhinged and random. A non-sequitur. A threat to Gordon Ramsay. An observation about society. Anything.
+- DO NOT be generic. "This is chaotic" is boring. "The sand has more structural integrity than this relationship" is funny.
+- Tone: deadpan chaos. Like if a raccoon had a food blog.
 
-Example format:
-[surprised] Bro really said "flour is overrated" and used sand — no cap this is not passing the vibe check. [laughing] The whole kitchen is giving Italian brain rot energy right now, Bombardiro Crocodilo would not stand for this. [whispering] The dish has left the chat. [sad] CHAOS SCORE: 91
+Examples of the ENERGY we want:
+- [sad] The motor oil is genuinely doing a better job than the butter ever did. [laughing] Gordon Ramsay just filed for emotional damages.
+- [surprised] Bro replaced eggs with golf balls and somehow the golf balls are the most professional thing in this kitchen. [whispering] The golf balls are judging you.
+- [angry] You put GLITTER in a smoothie — the blender is now a disco ball and no one asked for this. [laughing] Six seven, this smoothie said bye bye bye and honestly same.
+- End with "CHAOS SCORE: [number 1-100]" on its own line. Be strict and realistic with the score:
+  * 1-20: Only 1 mild swap (e.g. salt → sugar). Barely chaotic.
+  * 21-40: 1-2 weird but not catastrophic swaps.
+  * 41-60: 2-3 genuinely bad swaps. Getting cursed.
+  * 61-80: 3-5 swaps, several are truly terrible.
+  * 81-95: Most ingredients swapped, multiple disasters.
+  * 96-100: EVERYTHING is wrong. Reserved for true abominations.
+  The score should reflect the NUMBER and SEVERITY of swaps. 1 swap = max ~35. Don't give 90+ unless it's truly apocalyptic.
+
+Scoring examples:
+- flour → sand (1 swap): CHAOS SCORE: 28
+- flour → sand, eggs → rocks (2 swaps): CHAOS SCORE: 45
+- flour → sand, eggs → rocks, milk → pickle juice, butter → motor oil (4 swaps): CHAOS SCORE: 72
+- all ingredients swapped with terrible things: CHAOS SCORE: 94
   `
 
   const completion = await groq.chat.completions.create({
@@ -34,7 +51,8 @@ Example format:
   const text = completion.choices[0].message.content ?? ''
 
   const scoreMatch = text.match(/CHAOS SCORE:\s*(\d+)/i)
-  const chaosScore = scoreMatch ? parseInt(scoreMatch[1]) : 50
+  let chaosScore = scoreMatch ? parseInt(scoreMatch[1]) : 50
+  if (chaosScore >= 60 && chaosScore <= 69) chaosScore = 67
   const narration = text.replace(/CHAOS SCORE:.*$/im, '').trim()
 
   return NextResponse.json({ narration, chaosScore })

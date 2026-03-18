@@ -38,7 +38,7 @@ export default function ChaosPage() {
 
     // Play audio after short delay
     setTimeout(() => {
-      if (audioRef.current) {
+      if (audioRef.current && data.audioUrl) {
         audioRef.current.src = data.audioUrl
         audioRef.current.play().catch(() => {})
       }
@@ -77,6 +77,10 @@ export default function ChaosPage() {
       </div>
       <div className="text-gray-500 text-sm uppercase tracking-[0.3em] mb-3">Chaos Score</div>
 
+      {result.chaosScore === 67 && (
+        <div className="text-orange-400 font-bold text-lg mb-2 animate-pulse">six seven 🤌</div>
+      )}
+
       {/* Tier badge */}
       <div className={`${tier.bg} px-6 py-2 rounded-full text-white font-bangers text-xl tracking-wider mb-10`}>
         {tier.label}
@@ -110,15 +114,17 @@ export default function ChaosPage() {
       )}
 
       {/* Audio player */}
-      <div className="mb-8 w-full max-w-xl">
-        <p className="text-xs text-gray-600 uppercase tracking-widest mb-2">🔊 Hear the chaos</p>
-        <audio
-          ref={audioRef}
-          controls
-          className="w-full rounded-xl"
-          style={{ filter: 'invert(1) hue-rotate(180deg)' }}
-        />
-      </div>
+      {result.audioUrl && (
+        <div className="mb-8 w-full max-w-xl">
+          <p className="text-xs text-gray-600 uppercase tracking-widest mb-2">🔊 Hear the chaos</p>
+          <audio
+            ref={audioRef}
+            controls
+            className="w-full rounded-xl"
+            style={{ filter: 'invert(1) hue-rotate(180deg)' }}
+          />
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex gap-4 flex-wrap justify-center">

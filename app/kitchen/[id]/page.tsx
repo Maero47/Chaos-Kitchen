@@ -76,13 +76,18 @@ export default function KitchenPage({ params }: { params: { id: string } }) {
       })
       const { narration, chaosScore } = await narrateRes.json()
 
-      const speakRes = await fetch('/api/speak', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: narration }),
-      })
-      const audioBlob = await speakRes.blob()
-      const audioUrl = URL.createObjectURL(audioBlob)
+      let audioUrl: string | null = null
+      try {
+        const speakRes = await fetch('/api/speak', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: narration }),
+        })
+        if (speakRes.ok) {
+          const audioBlob = await speakRes.blob()
+          audioUrl = URL.createObjectURL(audioBlob)
+        }
+      } catch {}
 
       sessionStorage.setItem('chaosResult', JSON.stringify({
         recipeName: recipe.name,
