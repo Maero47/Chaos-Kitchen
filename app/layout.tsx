@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Chaos Kitchen',
+  title: 'Chaos Kitchen 🍳💥',
   description: 'Swap ingredients. Ruin dinner. Hear Gordon scream.',
 }
 
